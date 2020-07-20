@@ -49,13 +49,13 @@ class CreatePost(LoginRequiredMixin,SelectRelatedMixin,generic.CreateView):
     form_class = forms.PostForm
 
     def form_valid(self, form):
-        try:
-            self.object = form.save(commit=False)
-            self.object.user = self.request.user
-            self.object.save()
-        except:
-            raise Exception('Cant post')
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
         return super().form_valid(form)
+
+    def form_invalid(self,form):
+        return reverse_lazy('groups:all')
 
 
 class DeletePost(generic.DeleteView,LoginRequiredMixin,SelectRelatedMixin):
